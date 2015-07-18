@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/bg">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/logov2" />
+
+    <LinearLayout 
+        android:layout_marginTop="50dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal" >
+    	<LinearLayout 
+    	    android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        	<TextView 
+        	    android:layout_height="wrap_content"
+        	    android:layout_width="60dp"
+        	    android:text="@string/username" />
+        	<EditText 
+        	    android:background="@android:drawable/edit_text"
+        	    android:maxLength="30"
+        	    android:singleLine="true"
+        	    android:id="@+id/username_et"
+        	    android:layout_width="fill_parent"
+        	    android:layout_height="wrap_content" />
+    	</LinearLayout>
+    	<LinearLayout 
+    	    android:layout_marginBottom="30dp"
+    	    android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        	<TextView 
+        	    android:layout_height="wrap_content"
+        	    android:layout_width="60dp"
+        	    android:text="@string/password" />
+        	<EditText 
+        	    android:background="@android:drawable/edit_text"
+        	    android:maxLength="30"
+        	    android:singleLine="true"
+        	    android:id="@+id/password_et"
+        	    android:layout_width="fill_parent"
+        	    android:layout_height="wrap_content"
+        	    android:password="true" />
+    	</LinearLayout>
+    	<LinearLayout 
+    	    android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" >
+        	<Button 
+        	    android:id="@+id/login_btn"
+        	    android:layout_width="fill_parent"
+        	    android:layout_height="wrap_content"
+        	    android:layout_weight="1"
+        	    android:layout_marginRight="20dp"
+        	    android:text="@string/login" />
+        	<Button 
+        	    android:id="@+id/register_btn"
+        	    android:layout_width="fill_parent"
+        	    android:layout_height="wrap_content"
+        	    android:layout_weight="1"
+        	    android:layout_marginLeft="20dp"
+        	    android:text="@string/register" />
+    	</LinearLayout>
+    	<LinearLayout 
+    	    android:layout_marginTop="20dp"
+    	    android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        	<CheckBox
+        	    android:id="@+id/isremenber_cb"
+        	    android:checked="false"
+        	    android:layout_gravity="center_vertical"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:textSize="10sp"
+        	    android:text="@string/remenber" >
+        	</CheckBox>
+        	<Button        	  
+        	    android:id="@+id/password_search_btn"  
+        	    android:textSize="10sp"
+        	    android:layout_marginLeft="150dp"
+        	    android:layout_width="wrap_content"
+        	    android:layout_height="wrap_content"
+        	    android:text="@string/password_search" />
+    	</LinearLayout>
+    </LinearLayout>
+</LinearLayout>

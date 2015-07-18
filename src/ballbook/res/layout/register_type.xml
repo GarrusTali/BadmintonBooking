@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/bg">
+      <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:text="@string/register"
+            android:textColor="@android:color/white"
+            android:textSize="30sp" />   
+      <RadioGroup     
+          android:id="@+id/type_rg"
+          android:layout_marginTop="150dp"
+          android:layout_gravity="center"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:orientation="vertical" >
+          <RadioButton 
+              android:id="@+id/isUser_rBtn"
+              android:checked="true"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/user"/>
+          <RadioButton 
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="@string/seller_"/>
+      </RadioGroup>
+      <Button 
+          android:id="@+id/register_btn"
+          android:layout_marginTop="100dp"
+          android:layout_gravity="center_horizontal"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/submit" />
+</LinearLayout>
