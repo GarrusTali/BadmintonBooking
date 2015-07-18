@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="../static/bootstrap-3.0.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/basic.css">
+</head>
+<body>
+    <div class="cqf-header">
+        <div>
+            <lable>Quickly Search</lable>
+            <input type="text">
+            <button class="Quick-search"><span class="glyphicon glyphicon-search"></span></button>
+        </div>
+    </div>
+    <div class="cqf-content">
+        <!--快速查找-->
+        <div class="cqf-quickly-search">
+            <div class="cqf-quickly-div">
+                <!--以下部分需要数据库数据回传-->
+            </div>
+        </div>
+        <!--高级查找-->
+        <div class="cqf-Advanced">
+
+            <div class="Monster">
+                <div class="title">Monster</div>
+                <div class="cqf-monster-div">
+                    <!--以下部分需要数据库数据回传-->
+                    
+                </div>
+            </div>
+            <div class="Advanced">
+                <div class="title">Advanced Search</div>
+                <div>
+                    <div class="keyword search-item">
+                        <lable>keyword:</lable>
+                        <input type="text">
+                    </div>
+                    <div class="Card-Type" id="cqf-flag1">
+                        <div class="checkbox-lable"><lable>Card Type:</lable></div>
+                        <div class="checkbox-items" id="cqf-flag2">
+                            <div class="Monster-Card"><input type="checkbox">Monster Card</div>
+                            <div class="Magic-Trap-Card"><input type="checkbox">Magic Card</div>
+                        </div>
+                    </div>
+                    <div class="Starts search-item">
+                        <lable>Stars:</lable>
+                        <input type="text">
+                    </div>
+                    <div class="Property search-item">
+                        <lable>Property:</lable>
+                        <input type="text">
+                    </div>
+                    <div class="Race search-item">
+                        <lable>Race:</lable>
+                        <input type="text">
+                    </div>
+                    <div class="Attack search-item">
+                        <lable>Attack:</lable>
+                        <input type="text">
+                    </div>
+                    <div class="Defense search-item">
+                        <lable>Defense:</lable>
+                        <input type="text">
+                    </div>
+                    <div class="search"><button>Search</button></div>
+                </div>
+            </div>
+            <div class="Magic-Trap">
+                <div class="title">Magic&Trap</div>
+                <div class="cqf-monster-div">
+                    <!--以下部分需要数据库数据回传-->
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cqf-footer">
+        <div>
+            <button class="Advanced-Search">Advanced Search</button>
+            <button class="cqf-icon"><span class="glyphicon glyphicon-align-justify"></span></button>
+            <button>Grouping Cards</button>
+        </div>
+    </div>
+
+
+    <!--大图片提示-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <img src="../static/images/monster-1.jpg">
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</body>
+    <script src="../static/js/jquery-1.9.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../static/bootstrap-3.0.3/js/bootstrap.min.js"></script>
+    <script>
+        //初始化
+        var which;
+        $(".cqf-Advanced").hide();
+        $(".cqf-icon").attr("disabled",true);
+        type(true,"gray");
+        $(".Monster-Card input").change(function(){
+            if ($(".Monster-Card input").prop("checked") == true &&
+                $(".Magic-Trap-Card input").prop("checked") == false){
+                type(false,"white");
+            }
+            else {
+                type(true,"gray");
+            }
+        });
+        $(".Magic-Trap-Card input").change(function(){
+            if ($(".Magic-Trap-Card input").prop("checked") == false){
+                type(false,"white");
+            }
+            else {
+                type(true,"gray");
+            }
+        });
+        //切换快速查找
+        $(".cqf-icon").click(function(){
+            //模块切换
+            if ($(".cqf-header div").css("display") == "none"){
+                $(".cqf-header div").slideToggle();
+                $(".cqf-quickly-search").slideToggle();
+            }
+            if ($(".cqf-Advanced").css("display") == "block"){
+                $(".cqf-Advanced").slideToggle();
+            }
+            $(".cqf-quickly-div").html("");
+            $(".cqf-icon").attr("disabled",true);
+            $(".Advanced-Search").attr("disabled",false);
+        });
+        //快速查找
+        $(".Quick-search").click(function(){
+            //数据交互
+            $.post("/hello/",//将数据发向目的地
+            {
+             quick: $(this).prev().val(),
+             part: "quick"
+            },
+            function(data,status){
+              if (status == "success") {
+                $(".cqf-quickly-div").html(data);//回传html
+              }
+            });
+        });
+        //切换高级查找
+        $(".Advanced-Search").click(function(){
+            //模块切换
+            if ($(".cqf-header div").css("display") == "block"){
+                $(".cqf-header div").slideToggle();
+                $(".cqf-quickly-search").slideToggle();
+            }
+            if ($(".cqf-Advanced").css("display") == "none"){
+                $(".cqf-Advanced").slideToggle();
+            }
+            $(".cqf-monster-div").html("");
+            $(".cqf-magic-trap-div").html("");
+            $(".Advanced-Search").attr("disabled",true);
+            $(".cqf-icon").attr("disabled",false);
+        });
+        $(".cqf-Advanced .search").click(function(){
+            if ($(".Monster-Card input").prop("checked") == true &&
+                $(".Magic-Trap-Card input").prop("checked") == false){
+                which = 1;
+            }
+            if ($(".Magic-Trap-Card input").prop("checked") == true &&
+                $(".Monster-Card input").prop("checked") == false) {
+                which = 2;
+            }
+            if ($(".Magic-Trap-Card input").prop("checked") == true &&
+                $(".Monster-Card input").prop("checked") == true) {
+                which = 3;
+            }
+            if ($(".Monster-Card input").prop("checked") == false &&
+                    $(".Magic-Trap-Card input").prop("checked") == false)
+                alert("Please chose Card Type!!");
+            else {
+                $.post("/hello/",//将数据发向目的地
+                {
+                 keyword:$(".keyword input").val(),
+                 Classfication: $(".Classfication input").val(),
+                 box: which,
+                 Starts: $(".Starts input").val(),
+                 Property: $(".Property input").val(),
+                 Race: $(".Race input").val(),
+                 Attack: $(".Attack input").val(),
+                 Defense: $(".Defense input").val(),
+                 part: "careful"
+                },
+                function(data,status){
+                  if (status == "success") {
+                        if (!data) 
+                            alert("没有找到你要的卡片！")
+                        $(".cqf-monster-div").html(data);//回传html
+                  }
+                });
+            }
+        });
+        function type(x,y) {
+            $(".Starts input").attr("disabled",x).css("background",y);
+            $(".Starts").css("color",y);
+            $(".Property input").attr("disabled",x).css("background",y);
+            $(".Property").css("color",y);
+            $(".Race input").attr("disabled",x).css("background",y);
+            $(".Race").css("color",y);
+            $(".Attack input").attr("disabled",x).css("background",y);
+            $(".Attack").css("color",y);
+            $(".Defense input").attr("disabled",x).css("background",y);
+            $(".Defense").css("color",y);
+        }
+        //图片放大
+        $(document).on("click",".cqf-content img",function(){
+            $(".modal-content img").prop("src",$(this).prop("src"));
+        });
+    </script>
+</html>
