@@ -1,1 +1,0 @@
-folder "ballbacking" uses Django as the background maintenance.
