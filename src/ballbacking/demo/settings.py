@@ -1,4 +1,25 @@
 # Django settings for demo project.
+import os
+import os.path
+from os import environ
+
+debug = not environ.get("APP_NAME","")
+
+if debug:
+    MYSQL_DB = 'ballbook'
+    MYSQL_USER = 'root'
+    MYSQL_PASS = 'hello'
+    MYSQL_HOST_M = '127.0.0.1'
+    MYSQL_HOST_S = '127.0.0.1'
+    MYSQL_PORT = '3306'
+else:
+    import sae.const
+    MYSQL_DB = sae.const.MYSQL_DB 
+    MYSQL_USER = sae.const.MYSQL_USER 
+    MYSQL_PASS = sae.const.MYSQL_PASS 
+    MYSQL_HOST_M = sae.const.MYSQL_HOST 
+    MYSQL_HOST_S = sae.const.MYSQL_HOST_S 
+    MYSQL_PORT = sae.const.MYSQL_PORT
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -11,25 +32,26 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'ballbook',                      # Or path to database file if using sqlite3.
-        # The following settings are not used with sqlite3:
-        'USER': 'root',
-        'PASSWORD': 'hello',
-        'HOST': '127.0.0.1',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '3306',                    # Set to empty string for default.
+    'ENGINE': 'django.db.backends.mysql',
+    'NAME': MYSQL_DB,
+    'USER': MYSQL_USER,
+    'PASSWORD': MYSQL_PASS,
+    'HOST': MYSQL_HOST_M,
+    'PORT': MYSQL_PORT,
     }
 }
-
+DEFAULT_CHARSET='utf-8'
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+                '.sinaapp.com',
+                ]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Asia/Shanghai'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -62,7 +84,7 @@ MEDIA_URL = ''
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/var/www/example.com/static/"
 import os
-STATIC_ROOT = os.path.join(os.path.dirname(__file__), '../static').replace('\\', '/')
+STATIC_ROOT = os.path.join(os.path.dirname(__file__), 'static').replace('\\', '/')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
@@ -115,7 +137,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    'D:/ballbacking/templates',
+    'templates',
 )
 
 INSTALLED_APPS = (
