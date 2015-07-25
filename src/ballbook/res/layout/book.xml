@@ -1,32 +1,32 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="10dp"
     android:orientation="vertical"
-    tools:context="com.sysu.userCenter。BookActivity" >
-    <TextView 
-       android:layout_gravity="center_horizontal"
+    tools:context="com.sysu.userCenter。BookActivity" >   
+     <TextView 
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:text="订单申请"
+       android:text="球馆信息："
        android:textColor="@android:color/black"
-       android:textSize="24sp"
-       android:layout_marginTop="15dp" />
+       android:textSize="22sp"
+       android:layout_marginTop="15dp" />  
     <LinearLayout 
-        android:background="@color/light_green"
-        android:layout_margin="10dp"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         >    
       <ImageView 
-        android:layout_width="140dp"
-        android:layout_height="100dp"
+        android:layout_margin="10dp"
+        android:layout_width="100dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_vertical"
         android:src="@drawable/playground"
           />
       <LinearLayout
-          android:layout_margin="10dp"
           android:layout_gravity="center_vertical"
           android:layout_width="fill_parent"
           android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
         		android:textSize="22sp" />
            <TextView 
         		android:text="联系方式:13929591624"
-        		android:layout_width="150dp"
+        		android:layout_width="wrap_content"
         		android:layout_height="wrap_content"
         		android:id="@+id/phone" />
            <TextView 
@@ -56,52 +56,56 @@
       </LinearLayout>
     </LinearLayout>
     <TextView
-         android:layout_marginLeft="10dp"
+         android:text="请选择时间:"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textColor="@android:color/black"
+         android:textSize="22sp" />
+    <LinearLayout
+          android:layout_gravity="center_vertical"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+          <NumberPicker 
+        	android:id="@+id/timepicker"
+        	android:layout_marginLeft="10dp"
+    		android:layout_marginRight="10dp"
+    		android:layout_weight="1"
+        	android:layout_width="match_parent"
+        	android:layout_height="wrap_content"
+        	/>
+          <Button 
+              android:id = "@+id/timechangeBtn"
+              android:text="重选"
+              android:layout_weight="4"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              />
+    </LinearLayout>
+    <TextView
          android:text="请选择场地:"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:textColor="@android:color/black"
          android:textSize="22sp" />
-    	<GridView 
+    <GridView 
+            android:layout_marginTop="10dp"
     	    android:id="@+id/gridView"
-    	    android:layout_marginLeft="10dp"
-    	    android:layout_marginRight="10dp"
 	        android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
+        	android:layout_height="160dp"
         	android:verticalSpacing="2dp"
         	android:horizontalSpacing="2dp"
         	android:stretchMode="columnWidth"
-        	android:numColumns="13"
+        	android:numColumns="5"
         	>
-    	</GridView>   
-       <TextView
-         android:layout_marginLeft="10dp"
-         android:text="已选场次:"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:textColor="@android:color/black"
-         android:textSize="22sp" />    
-        <LinearLayout 
-        	android:background="@color/light_green"
-        	android:layout_margin="10dp"
-        	android:layout_marginTop="10dp"
-        	android:layout_width="fill_parent"
-        	android:layout_height="fill_parent"
-        	android:orientation="vertical">  
-        	<TextView
-        	    android:id="@+id/msg_tv"
-         		android:layout_margin="10dp"
-         		android:text="场地：3号场   时间段：9:00~10:00"
-         		android:layout_width="fill_parent"
-         		android:layout_height="wrap_content"
-         		android:textColor="@android:color/black" /> 
-         	<Button
-         	    android:layout_marginTop="20dp"
-         	    android:id="@+id/submit_btn"
-         	    android:layout_gravity="center_horizontal"
-         	    android:layout_width="100dp"
-         	    android:layout_height="70dp"
-         	    android:text="提交订单"
-         	    />
-        </LinearLayout>   
+    </GridView>  
+    <Button
+         	android:layout_marginTop="10dp"
+         	android:id="@+id/submit_btn"
+         	android:layout_gravity="bottom"
+         	android:layout_width="match_parent"
+         	android:layout_height="wrap_content"
+         	android:text="提交订单"
+    />
 </LinearLayout>

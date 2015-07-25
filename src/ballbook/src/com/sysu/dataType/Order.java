@@ -6,68 +6,69 @@ import java.util.List;
 import android.R.integer;
 
 public class Order {
-	private String order_id, user_id, seller_id;
-	private Seller seller;
-	private String applyTime;
-	private List<Position> positionList;
+	private String seller_id;
+	private String sname;
+	private String address;
+	private Integer applyTime;
+	private String applyDate;
+	private List<Integer> positionList;
 	public Order()
 	{
 		 
 	}
-    public Order(Seller seller, String applyTime, List<Position> positionList)
+    public Order(String seller_id, Integer applyTime, List<Integer> positionList)
     {
-    	//this.order_id = order_id;
-    	//this.user_id = user_id;
-    	//this.seller_id = seller_id;
-    	this.seller = seller;
+    	this.seller_id = seller_id;
     	this.applyTime = applyTime;
     	this.positionList = positionList;
     }
-    public String getOrder_id()
-    {
-    	return this.order_id;
-    }
-    public String getUser_id()
-    {
-    	return this.user_id;
-    }
+
     public String getSeller_id()
     {
     	return this.seller_id;
     }
-    public Seller getSeller()
+    public String getSeller_name()
     {
-    	return this.seller;
+    	return this.sname;
     }
-    public String getApplyTime()
+    public String getAddress()
+    {
+    	return this.address;
+    }
+    public Integer getApplyTime()
     {
     	return this.applyTime;
     }
-    public List<Position> getPositionList()
+    public String getApplyDate()
+    {
+    	return this.applyDate;
+    }
+    public List<Integer> getPositionList()
     {
     	return this.positionList;
     }
-    public void setOrder_id(String order_id)
-    {
-    	this.order_id = order_id;
-    }
-    public void setUser_id(String user_id)
-    {
-    	this.user_id = user_id;
-    }
+
     public void setSeller_id(String seller_id)
     {
     	this.seller_id = seller_id;
     }
-    public void setSeller(Seller seller)
+    public void setSeller_name(String sname)
     {
-    	this.seller = seller;
+    	this.sname = sname;
     }
-    public void setApplyTime(String applyTime)
+    public void setAddress(String address)
+    {
+    	this.address = address;
+    }
+    public void setApplyDate(String applyDate)
+    {
+    	this.applyDate = applyDate;
+    }
+    public void setApplyTime(Integer applyTime)
     {
     	this.applyTime = applyTime;
     }
-    public void setPositionList(List<Position> positionList)
+    public void setPositionList(List<Integer> positionList)
     {
     	this.positionList = positionList;
     }

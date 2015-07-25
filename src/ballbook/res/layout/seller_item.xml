@@ -5,55 +5,37 @@
     android:orientation="horizontal">"
   <LinearLayout 
       android:layout_margin="10dp"
-      android:layout_width="250dp"
+      android:layout_weight="1"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical" >
     <TextView
         android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+      android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="22sp" />
      <TextView 
         android:text="联系方式:13929591624"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+      android:layout_height="wrap_content"
         android:id="@+id/phone" />
      <TextView 
         android:text="地址：至善园二号楼"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+      android:layout_height="wrap_content"
         android:id="@+id/address" />
-    <LinearLayout 
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <TextView 
-            android:text="营业时间：09:00"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/start_time" />
-        <TextView 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="到" />
-        <TextView 
-            android:text="22:00"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/end_time" />
-    </LinearLayout>
     <TextView 
          android:text="简介:12345"
-         android:layout_width="wrap_content"
+         android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:id="@+id/introduction" />
   </LinearLayout>
   <Button 
       android:id="@+id/book_btn"
       android:layout_gravity="center_vertical"
-      android:layout_width="wrap_content"
+      android:layout_weight="4"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="预订"
       />

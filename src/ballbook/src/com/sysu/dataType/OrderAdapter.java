@@ -57,20 +57,20 @@ public class OrderAdapter extends BaseAdapter {
 		}
 		Order order = (Order)getItem(position);
 		TextView sellerName = (TextView)convertView.findViewById(R.id.name);
+		TextView applyDate = (TextView)convertView.findViewById(R.id.applyDate);
 		TextView applyTime = (TextView)convertView.findViewById(R.id.applyTime);
 		TextView positionMsg = (TextView)convertView.findViewById(R.id.positionList);
-		sellerName.setText(order.getSeller().getName());
-		applyTime.setText(order.getApplyTime());
-		StringBuffer s = null;
-		List<Position> positionList = order.getPositionList();	
+		sellerName.setText("球馆 ： " + order.getSeller_name());
+		applyTime.setText("时间 ： " + toTime(order.getApplyTime()));
+		applyTime.setText("日期 ： " + order.getApplyDate());
+		StringBuffer s = new StringBuffer("");
+		s.append("场地 ： ");
+		List<Integer> positionList = order.getPositionList();		
 		for(int i = 0; i < positionList.size(); i++)
 		{
-			List<Time> timeList = positionList.get(i).getTimeList();
-			for(int j = 0; j < timeList.size(); j++)
-			{
-				Time time = timeList.get(j);
-			    s.append("场号: "+i+" 时间段: " + toTime(time.getTime()) + "\n"); 
-			}
+			s.append(positionList.get(i).toString());
+			if(i != positionList.size()-1)
+			     s.append(",");
 		}
 		positionMsg.setText(s.toString());
 		return convertView;
@@ -78,7 +78,7 @@ public class OrderAdapter extends BaseAdapter {
     
 	public String toTime(int time)
 	{
-		return (time + 9 + ":00 - ") + (time+10+":00");
+		return (time +":00 - ") + (time+1+":00");
 	}
 
 

@@ -8,6 +8,9 @@ import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.sysu.ballbook.R.string;
 
@@ -16,7 +19,8 @@ import android.os.AsyncTask;
 public class NetWorkManager {
 	
 	private static NetWorkManager mInstance = null;	
-	public static String sCookie;
+	public static String session;
+	public static String saeut;
 	private NetWorkManager() {
 
 	}
@@ -45,8 +49,8 @@ public class NetWorkManager {
 					case POST:
 						uc = new URL(url).openConnection();
 						//设置cookie
-						if(sCookie != null && sCookie.length() > 0)
-							uc.setRequestProperty("Cookie", sCookie);	
+						if(session != null && session.length() > 0)
+							uc.setRequestProperty("Cookie", session);	
 						
 						// 允许输出
 						uc.setDoOutput(true);
@@ -55,11 +59,15 @@ public class NetWorkManager {
 								new OutputStreamWriter(uc.getOutputStream(),
 										"utf-8"));
 						bw.write(paramsStr.toString());
-						bw.flush();
+						bw.flush(); 
 						//获得cookie
-						String cookie = uc.getHeaderField("Cookie");
-						if(cookie != null && cookie.length() > 0)
-							sCookie = cookie;
+						if(session == null)
+						{
+							Map<String,List<String>> mymap = uc.getHeaderFields();
+							String[] cookie = mymap.get("Set-Cookie").toArray(new String[0]);
+							session = cookie[0].split(";")[0];
+						}
+						
 						break;
 					// GET方法以url参数方式进行上传
 					default:
@@ -71,8 +79,8 @@ public class NetWorkManager {
 							.openConnection();
 						}
 						//设置cookie
-						if(sCookie != null && sCookie.length() > 0)
-							uc.setRequestProperty("Cookie", sCookie);
+						if(session != null && session.length() > 0)
+							uc.setRequestProperty("Cookie", session);
 						break;
 					}
 
@@ -83,7 +91,7 @@ public class NetWorkManager {
 					while ((line = br.readLine()) != null) {
 						result.append(line);
 					}
-					return result.toString();
+					return result.toString().split("<")[0];
 
 				} catch (MalformedURLException e) {
 					e.printStackTrace();

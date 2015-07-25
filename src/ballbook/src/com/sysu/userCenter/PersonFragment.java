@@ -130,17 +130,14 @@ public class PersonFragment extends Fragment {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 		    	EditText old_password_et =  (EditText)contentView.findViewById(R.id.old_password_et);
-		    	EditText new_password1_et =  (EditText)contentView.findViewById(R.id.new_password1_et);
-		    	EditText new_password2_et =  (EditText)contentView.findViewById(R.id.new_password2_et);
+		    	EditText new_password_et =  (EditText)contentView.findViewById(R.id.new_password1_et);
+		    	EditText confirm_password_et =  (EditText)contentView.findViewById(R.id.new_password2_et);
 				String old_password = old_password_et.getText().toString();
-				String new_password1 = new_password1_et.getText().toString();
-				String new_password2 = new_password2_et.getText().toString();
-				if(new_password1.equals(new_password2))
-				{
-					CommandManager.getInstance().edit_user_password(PersonFragment.getInstance().getActivity(), old_password, new_password1);
-				} else {
-					Toast.makeText(PersonFragment.this.getActivity(), "ÐÂÃÜÂë´íÎó£¨ÐÞ¸ÄÊ§°Ü£©", Toast.LENGTH_SHORT).show();
-				}
+				String new_password = new_password_et.getText().toString();
+				String confirm_password = confirm_password_et.getText().toString();
+
+				CommandManager.getInstance().edit_user_password(PersonFragment.getInstance().getActivity(), old_password, new_password, confirm_password);
+			
 			}		
     	});
     	builder.setNegativeButton("È¡Ïû", new DialogInterface.OnClickListener() {

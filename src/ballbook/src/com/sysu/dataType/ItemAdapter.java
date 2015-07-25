@@ -7,6 +7,7 @@ import java.util.List;
 import com.sysu.ballbook.R;
 import com.sysu.manager.CommandManager;
 import com.sysu.userCenter.BookActivity;
+import com.sysu.userCenter.ChooseList;
 
 
 
@@ -16,6 +17,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.style.UpdateAppearance;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,38 +29,24 @@ import android.widget.Toast;
 
 public class ItemAdapter extends BaseAdapter {
 
-	private List<Unit> mList;
 	private Context mContext;
-	private List<Position> positionList;
-	private TextView msg;
-	private Button submit_btn;
+	private List<Integer> positionList;
 	private LayoutInflater mLayoutInflater;
 	
-	public ItemAdapter(Context context, List<Unit> list) {
+	public ItemAdapter(Context context, List<Integer> list) {
 		mContext = context;
-		mList = list;
-		positionList = new ArrayList<Position>();		
-		msg = (TextView)((Activity)mContext).findViewById(R.id.msg_tv);	
-		submit_btn = (Button)((Activity)mContext).findViewById(R.id.submit_btn);
-		submit_btn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-                String id = ((Activity)mContext).getIntent().getExtras().getString("ID");
-				CommandManager.getInstance().sendOrder(mContext, id, positionList);
-			}
-		});
+		positionList = list;	
 		mLayoutInflater = LayoutInflater.from(mContext);
 	}
 
 	@Override
 	public int getCount() {
-		return mList.size();
+		return positionList.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return mList.get(position);
+		return positionList.get(position);
 	}
 
 	@Override
@@ -69,12 +57,14 @@ public class ItemAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = mLayoutInflater.inflate(R.layout.unit_item, parent,
+			convertView = mLayoutInflater.inflate(R.layout.position_item, parent,
 					false);
 		}
-		final Unit unit = (Unit) getItem(position);
-        TextView unit_btn = (TextView)convertView.findViewById(R.id.unit_btn);
-        if(!unit.isEmpty())
+		//场地预订标志
+		final Integer isbook = (Integer)getItem(position);
+		final Integer position_ = position;
+        Button unit_btn = (Button)convertView.findViewById(R.id.unit_btn);
+        if(isbook == 0 || ChooseList.getInstance().current_hour > ChooseList.getInstance().ask_hour)
         {
         	unit_btn.setBackgroundColor(mContext.getResources().getColor(R.color.gray));
         	unit_btn.setClickable(false);
@@ -83,76 +73,34 @@ public class ItemAdapter extends BaseAdapter {
             unit_btn.setOnClickListener(new OnClickListener() {	
     			@Override
     			public void onClick(View v) {
-    				if(unit.isEmpty())
+    				if(positionList.get(position_) == 1)
     				{
-    					add(unit);
-    					unit.setEmpty(1);
-    				    v.setBackgroundColor(mContext.getResources().getColor(R.color.blue));
-    					Toast.makeText(mContext, "申请预订：  场地:"+unit.getId()+"号场     时间"+unit.getTime() +":00~" + (unit.getTime()+1) + ":00", Toast.LENGTH_SHORT).show();
+    					if(ChooseList.getInstance().chooseList.size() < 4)
+    					{
+        					ChooseList.getInstance().chooseList.add(position_);//添加到已选列表
+        					positionList.set(position_, 0 );
+        				    v.setBackgroundColor(mContext.getResources().getColor(R.color.blue));
+    					} else {
+        				    Toast toast = Toast.makeText(mContext,"亲~最多只能订4个场地",Toast.LENGTH_SHORT);
+        				    toast.setGravity(Gravity.CENTER, 0, 0);
+        				    toast.show();
+						}
     				} else {
-    					cancel(unit);
-    					unit.setEmpty(0);
+    					ChooseList.getInstance().chooseList.remove(position_);
+    					positionList.set(position_, 1);
     				    v.setBackgroundColor(mContext.getResources().getColor(R.color.green));
-    					Toast.makeText(mContext, "取消预订：  场地:"+unit.getId()+"号场     时间"+unit.getTime() +":00~" + (unit.getTime()+1) + ":00", Toast.LENGTH_SHORT).show();	
+    				    //Toast toast = Toast.makeText(mContext,"取消"+position_+"号场地",Toast.LENGTH_SHORT);
+    				    //toast.setGravity(Gravity.CENTER, 0, 0);
+    				    //toast.show();
     				}
     				
     			}
     		});
         }
+        unit_btn.setText(""+ position);
 		return convertView;
 	}
 	
-	public void add(Unit unit)
-	{
-		for(int i = 0; i < positionList.size(); i++)
-		{
-			if(positionList.get(i).getPosition() == unit.getId())
-			{
-				positionList.get(i).getTimeList().add(new Time(unit.getTime(),unit.getEmpty()));
-				return ;
-			}
-		}
-		Position position = new Position();
-		position.setPositon(unit.getId());
-		position.getTimeList().add(new Time(unit.getTime(),unit.getEmpty()));
-		positionList.add(position);
-	}
-    public void cancel(Unit unit)
-    {
-		for(int i = 0; i < positionList.size(); i++)
-		{
-			if(positionList.get(i).getPosition() == unit.getId())
-			{
-				List<Time> timeList = positionList.get(i).getTimeList();
-				for(int j = 0; j < timeList.size(); j++)
-				{
-					if(timeList.get(j).getTime() == unit.getTime())
-					{
-						positionList.get(i).getTimeList().remove(j);
-						if(positionList.get(i).getTimeList().size() == 0)
-						{
-							positionList.remove(i);
-						}
-					}
-				}
-			}
-		}	
-    }
-    public void UpdateMsg()
-    {
-    	StringBuffer s = null;
-    	for(int i = 0; i < positionList.size(); i++)
-    	{
-    		s.append(positionList.get(i).getPosition() + "号场:\n");
-    		List<Time> timeList = positionList.get(i).getTimeList(); 		
-    		for(int j = 0; j < timeList.size(); j++)
-    		{
-    			s.append(toTime(timeList.get(j).getTime())+ " ");
-    		}
-    		s.append("\n");
-    	}
-    	msg.setText(s.toString());
-    }
 	public String toTime(int time)
 	{
 		return (time + 9 + ":00 - ") + (time+10+":00");

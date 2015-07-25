@@ -36,7 +36,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 
@@ -44,21 +46,20 @@ import com.sysu.ballbook.R;
 import com.sysu.dataType.ItemAdapter;
 import com.sysu.dataType.Order;
 import com.sysu.dataType.OrderAdapter;
-import com.sysu.dataType.Position;
 import com.sysu.dataType.Seller;
 import com.sysu.dataType.SellerAdapter;
-import com.sysu.dataType.Time;
-import com.sysu.dataType.Unit;
 import com.sysu.dataType.User;
 import com.sysu.login_register.LoginActivity;
 import com.sysu.login_register.Register_user;
+import com.sysu.userCenter.BookActivity;
+import com.sysu.userCenter.ChooseList;
 import com.sysu.userCenter.MainActivity;
 import com.sysu.userCenter.PersonFragment;
 
 public class CommandManager {
 	private static CommandManager mInstance = null;
-    private String ip = "http://172.18.34.94:8000";
-	//private String ip = "1.yuebauml.sinaapp.com";
+    //private String ip = "http://172.18.34.94:8000";
+	private String ip = "http://ballbook.sinaapp.com";
 	private CommandManager() {
 
 	}
@@ -80,8 +81,7 @@ public class CommandManager {
 			public void onSuccess(String result) {
 				// TODO Auto-generated method stub	 
 				mDialog.cancel();
-				Toast.makeText(mContext, NetWorkManager.sCookie, Toast.LENGTH_LONG).show();
-				if(!result.equals("login failed!!"))
+				if(!result.equals("login falied!!"))
         		{					
 					SharedPreferences sp = mContext.getSharedPreferences("userIfo", Context.MODE_PRIVATE);
         			if(sp.getBoolean("ISCHECK", true))
@@ -96,6 +96,7 @@ public class CommandManager {
         				editor.putString("PASSWORD", "");
         				editor.commit();
         			}
+    				Toast.makeText(mContext, "登陆成功", Toast.LENGTH_SHORT).show();
 	        		Intent intent = new Intent();
 	        		//根据登录的用户类型来进入相应的个人中心，后期加
 	        		intent.setClass(mContext, MainActivity.class); 		
@@ -103,7 +104,7 @@ public class CommandManager {
 	        		((Activity) mContext).finish();		      		
         		} else {
         			//输出错误信息
-        			Toast.makeText(mContext, "用户名不存在或密码错误！！", Toast.LENGTH_SHORT).show();
+        			Toast.makeText(mContext, "用户名或者密码错误", Toast.LENGTH_SHORT).show();
         		}
 			}		
 		};
@@ -136,14 +137,24 @@ public class CommandManager {
 				// TODO Auto-generated method stub	
 				if(result.equals("regist success!!"))
     			{
+					Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
 	        		Intent intent = new Intent();
 	        		intent.setClass(mContext, LoginActivity.class);   		
 	        		mContext.startActivity(intent);
 	        		((Activity) mContext).finish();	
-    			} else {
+    			} else if(result.equals("username exists")) {
     				//报错：用户名已存在
-    				Toast.makeText(mContext, "该用户名已存在！！", Toast.LENGTH_SHORT).show();
-    			}     
+    				Toast.makeText(mContext, "该用户名已存在", Toast.LENGTH_SHORT).show();
+    			} else if(result.equals("empty data exist")) {
+    				//报错：存在未填的属性
+    				Toast.makeText(mContext, "存在未填的属性", Toast.LENGTH_SHORT).show();
+    			} else if(result.equals("password diff")) {
+    				//报错：存在未填的属性
+    				Toast.makeText(mContext, "密码与确认密码不相同", Toast.LENGTH_SHORT).show();
+    			} else {
+    				//报错
+    				Toast.makeText(mContext, "未知错误", Toast.LENGTH_SHORT).show();
+    			}   
 			}		
 		};
 		NetWorkManager.FailCallback failCallback = new NetWorkManager.FailCallback() {	
@@ -160,7 +171,7 @@ public class CommandManager {
 		manager.NetConnection(successCallback,failCallback,url, httpMethod, 
 				             "username",user.getUsername(),
 				             "realname",user.getName(),
-				             "phonenum",user.getPhone(),
+				             "phonenumber",user.getPhone(),
 				             "password",user.getPassword(),
 				             "confirm_password",user.getPassword());	
 	}
@@ -180,14 +191,29 @@ public class CommandManager {
 				// TODO Auto-generated method stub	
 				if(result.equals("regist success!!"))
     			{
+					Toast.makeText(mContext, "注册成功", Toast.LENGTH_SHORT).show();
 	        		Intent intent = new Intent();
 	        		intent.setClass(mContext, LoginActivity.class); 		
 	        		mContext.startActivity(intent);
 	        		((Activity) mContext).finish();	
-    			} else {
+    			} else if(result.equals("username exists")){
     				//报错：用户名已存在
     				Toast.makeText(mContext, "该用户名已存在！！", Toast.LENGTH_SHORT).show();
-    			}     
+    			} else if(result.equals("empty data exist")) {
+    				//报错：存在未填的属性
+    				Toast.makeText(mContext, "存在未填的属性", Toast.LENGTH_SHORT).show();
+    			} else if(result.equals("password diff")) {
+    				//报错：存在未填的属性
+    				Toast.makeText(mContext, "密码与确认密码不相同", Toast.LENGTH_SHORT).show();
+    			} else if(result.equals("too many courts")) {
+    				//报错：存在未填的属性
+    				Toast.makeText(mContext, "球场数不能超过20个", Toast.LENGTH_SHORT).show();
+    			}
+    			
+    			else {
+    				//报错
+    				Toast.makeText(mContext, "未知错误", Toast.LENGTH_SHORT).show();
+    			}        
 			}		
 		};
 		NetWorkManager.FailCallback failCallback = new NetWorkManager.FailCallback() {	
@@ -204,7 +230,7 @@ public class CommandManager {
 		manager.NetConnection(successCallback, failCallback, url, httpMethod, 
 				             "username",seller.getSellername(),
 				             "sname",seller.getName(),
-				             "phonenum",seller.getPhone(),
+				             "phonenumber",seller.getPhone(),
 				             "address",seller.getAddress(),
 				             "description",seller.getIntroduction(),
 				             "counter",String.valueOf(seller.getNumber()),
@@ -214,7 +240,7 @@ public class CommandManager {
 	}
 	
 	public void getUser(final Context mContext, final View mView)
-	{
+	{/*
 		//测试用例
 		final EditText username_et = (EditText)mView.findViewById(R.id.username_et);
 		final EditText name_et = (EditText)mView.findViewById(R.id.name_et);
@@ -230,7 +256,7 @@ public class CommandManager {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*
+		*/
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("当前状态：");
 		builder.setMessage("正在获取个人信息······");
@@ -267,7 +293,7 @@ public class CommandManager {
 		NetWorkManager.HttpMethod httpMethod = NetWorkManager.HttpMethod.GET;
 		dialog.show();
 		manager.NetConnection(successCallback, failCallback, url, httpMethod);	
-		*/	
+		
 	}
 	
 	public void edit_user(final Context mContext, final View mView, User user)
@@ -291,9 +317,12 @@ public class CommandManager {
     				//isModify = false;
     				edit_btn.setText("编辑");
     				Toast.makeText(mContext, "个人信息修改成功", Toast.LENGTH_SHORT).show();
+                } else if(result.equals("empty data exist")){
+                	Toast.makeText(mContext, "存在未填的属性", Toast.LENGTH_SHORT).show();
                 } else {
-                	Toast.makeText(mContext, "个人信息修改失败！！", Toast.LENGTH_SHORT).show();
-                }
+    				//报错
+    				Toast.makeText(mContext, "未知错误", Toast.LENGTH_SHORT).show();
+    			}     
 			}		
 		};
 		NetWorkManager.FailCallback failCallback = new NetWorkManager.FailCallback() {	
@@ -308,10 +337,10 @@ public class CommandManager {
 		NetWorkManager.HttpMethod httpMethod = NetWorkManager.HttpMethod.POST;
 		manager.NetConnection(successCallback, failCallback, url, httpMethod, 
 				             "realname",user.getName(),
-				             "phonenum",user.getPhone());	
+				             "phonenumber",user.getPhone());	
 
 	}
-	public void edit_user_password(final Context mContext, String old_password, String new_password)
+	public void edit_user_password(final Context mContext, String old_password, String new_password, String confirm_pass)
 	{
 		NetWorkManager.SuccessCallback successCallback = new NetWorkManager.SuccessCallback(){
 			@Override
@@ -319,8 +348,14 @@ public class CommandManager {
 				// TODO Auto-generated method stub	
                 if(result.equals("modify success!!")){
     				Toast.makeText(mContext, "密码修改成功", Toast.LENGTH_SHORT).show();
+                } else if(result.equals("password diff")){
+                	Toast.makeText(mContext, "新密码和确认密码不一致", Toast.LENGTH_SHORT).show();
+                } else if(result.equals("old password incorrect")){
+                	Toast.makeText(mContext, "旧密码错误", Toast.LENGTH_SHORT).show();
+                } else if(result.equals("no newpass")){
+                	Toast.makeText(mContext, "新密码未填", Toast.LENGTH_SHORT).show();
                 } else {
-                	Toast.makeText(mContext, "密码修改失败！！", Toast.LENGTH_SHORT).show();
+                	Toast.makeText(mContext, "未知错误", Toast.LENGTH_SHORT).show();
                 }
 			}		
 		};
@@ -336,7 +371,7 @@ public class CommandManager {
 		manager.NetConnection(successCallback, failCallback, url, httpMethod, 
 				             "oldpass",old_password,
 				             "newpass",new_password,
-				             "confirmpass",new_password);	
+				             "confirm_password",confirm_pass);	
 	}
 	
 	public void getSellers(final Context mContext, final ListView sellerList)
@@ -363,7 +398,7 @@ public class CommandManager {
                     	JSONObject seller_JsonObject = mJsonArray.getJSONObject(i);
                     	seller.setId(seller_JsonObject.getString("id"));
                     	seller.setName(seller_JsonObject.getString("sname"));
-                    	seller.setPhone(seller_JsonObject.getString("phonenum"));
+                    	seller.setPhone(seller_JsonObject.getString("phonenumber"));
                     	seller.setAddress(seller_JsonObject.getString("address"));
                     	seller.setNumber(Integer.parseInt(seller_JsonObject.getString("counter")));
                     	seller.setIntroduction(seller_JsonObject.getString("description"));
@@ -410,33 +445,19 @@ public class CommandManager {
                     for(int i = 0; i < mJsonArray.length(); i++)
                     {             	
                     	Order order = new Order();
-                    	JSONObject order_JsonObject = mJsonArray.getJSONObject(i);
-                    	Seller seller = new Seller();
-                    	seller.setId(order_JsonObject.getString("id"));
-                    	seller.setName(order_JsonObject.getString("sname"));
-                    	seller.setPhone(order_JsonObject.getString("phonenum"));
-                    	seller.setAddress(order_JsonObject.getString("address"));
-                    	seller.setNumber(Integer.valueOf(order_JsonObject.getString("counter")));
-                    	seller.setIntroduction(order_JsonObject.getString("description"));
-                    	order.setSeller(seller);
-                    	order.setApplyTime(order_JsonObject.getString("applyTime"));
-                    	List<Position> positionList = new ArrayList<Position>();
-                    	JSONArray positionList_JsonArray = order_JsonObject.getJSONArray("positon");
+                    	JSONObject order_JsonObject = mJsonArray.getJSONObject(i);                   	
+                    	order.setSeller_name(order_JsonObject.getString("sname"));
+                    	JSONObject timeObject = order_JsonObject.getJSONObject("time");
+                    	
+                    	order.setApplyTime(timeObject.getInt("hour"));
+                        order.setApplyDate(timeObject.getInt("year") + 
+                        		"-" + timeObject.getInt("month")+ 
+                        		"-" + timeObject.getInt("day"));
+                    	ArrayList< Integer> positionList = new ArrayList<Integer>(); 
+                    	JSONArray positionList_JsonArray = order_JsonObject.getJSONArray("position");
                     	for(int j = 0; j < positionList_JsonArray.length(); j++)
                     	{
-                    		Position position = new Position();
-                    		JSONObject position_JsonObject = positionList_JsonArray.getJSONObject(j);
-                    		position.setPositon(Integer.valueOf(position_JsonObject.getString("position")));
-                    		List<Time> timeList = new ArrayList<Time>();
-                    		JSONArray timeList_JsonArray = position_JsonObject.getJSONArray("time");
-                    		for(int z = 0; z < timeList_JsonArray.length(); z++)
-                    		{
-                    			Time time = new Time();
-                    			time.setTime(Integer.valueOf(timeList_JsonArray.getJSONObject(z).getString("time")));
-                    			timeList.add(time);
-                    		}
-                    		position.setTimeList(timeList);
-                    		positionList.add(position);
+                    		positionList.add(positionList_JsonArray.getInt(j));
                     	}
                     	order.setPositionList(positionList);
                     	orders.add(order);
@@ -463,16 +484,16 @@ public class CommandManager {
 		manager.NetConnection(successCallback, failCallback, url, httpMethod);	
 	}	
 	
-	public void getOrderDetail(final Context mContext, final String id)
+	public void getSeller(final Context mContext, final String id)
 	{
 		final TextView name = (TextView)((Activity)mContext).findViewById(R.id.name);
 		final TextView phone = (TextView)((Activity)mContext).findViewById(R.id.phone);
 		final TextView address = (TextView)((Activity)mContext).findViewById(R.id.address);
 		final TextView introduction = (TextView)((Activity)mContext).findViewById(R.id.introduction);	
-		final GridView mGridView = (GridView)((Activity)mContext).findViewById(R.id.gridView);	
+		final NumberPicker timePicker = (NumberPicker)((Activity)mContext).findViewById(R.id.timepicker);
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("当前状态：");
-		builder.setMessage("正在获取信息详情······");
+		builder.setMessage("正在获取商家信息······");
 		final AlertDialog dialog = builder.create();
 		dialog.setCancelable(false);
 		NetWorkManager.SuccessCallback successCallback = new NetWorkManager.SuccessCallback(){
@@ -485,42 +506,11 @@ public class CommandManager {
 					JSONObject mJson = new JSONObject(result);
 					//显示商家信息
 					name.setText(mJson.getString("sname"));
-					phone.setText(mJson.getString("phonenum"));
-					address.setText(mJson.getString("address"));
-					introduction.setText(mJson.getString("description"));
-					//显示预订gridView
-                    JSONArray positionArray = mJson.getJSONArray("position");
-                    
-                    List<Position> positionList = new ArrayList<Position>();
-                	JSONArray positionList_JsonArray = mJson.getJSONArray("positon");
-                	for(int j = 0; j < positionList_JsonArray.length(); j++)
-                	{
-                		Position position = new Position();
-                		JSONObject position_JsonObject = positionList_JsonArray.getJSONObject(j);
-                		position.setPositon(Integer.valueOf(position_JsonObject.getString("position")));
-                		List<Time> timeList = new ArrayList<Time>();
-                		JSONArray timeList_JsonArray = position_JsonObject.getJSONArray("time");
-                		for(int z = 0; z < timeList_JsonArray.length(); z++)
-                		{
-                			Time time = new Time();
-                			time.setTime(Integer.valueOf(timeList_JsonArray.getJSONObject(z).getString("time")));
-                			time.setEmpty(Integer.valueOf(timeList_JsonArray.getJSONObject(z).getString("empty")));
-                			timeList.add(time);
-                		}
-                		position.setTimeList(timeList);
-                		positionList.add(position);
-                	}
-                	List<Unit> unitList = new ArrayList<Unit>();
-                	for(int i = 0; i < positionList.size(); i++)
-                	{
-                		List<Time> timeList = positionList.get(i).getTimeList();
-                		for(int j = 0; j < timeList.size(); j++)
-                		{
-                			unitList.add(new Unit(i,timeList.get(j).getTime(),timeList.get(j).getEmpty()));
-                		}
-                	}
-                	ItemAdapter itemAdapter = new ItemAdapter(mContext, unitList);
-        			mGridView.setAdapter(itemAdapter);
+					phone.setText("联系方式："+mJson.getString("phonenumber"));
+					address.setText("地址："+mJson.getString("address"));
+					introduction.setText("简介："+mJson.getString("description"));	
+					ChooseList.getInstance().current_hour = mJson.getInt("hour");	
+					//~~~~~~~~
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -534,14 +524,57 @@ public class CommandManager {
 				Toast.makeText(mContext, "通过网络获取信息时出现异常！！", Toast.LENGTH_SHORT).show();		
 			}
 		};	
-		final String url = ip+"/booking/detail/";
+		final String url = ip+"/booked/detail/";
 		NetWorkManager manager = NetWorkManager.getInstance();
 		NetWorkManager.HttpMethod httpMethod = NetWorkManager.HttpMethod.POST;
 		dialog.show();
-		manager.NetConnection(successCallback, failCallback, url, httpMethod, id);		
+		manager.NetConnection(successCallback, failCallback, url, httpMethod,"stadium_id", id);		
 	}
 	
-	public void sendOrder(final Context mContext, String id, List<Position> positionList)
+	public void getBook_detail(final Context mContext, final String id, final Integer time)
+	{
+		//记录用于申请的时间（用于与后台返回的时间比较 早于后台规定就不能订）
+		ChooseList.getInstance().ask_hour = time;
+		final GridView gridView = (GridView)((Activity)mContext).findViewById(R.id.gridView);
+		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+		builder.setTitle("当前状态：");
+		builder.setMessage("正在获取场地信息······");
+		final AlertDialog dialog = builder.create();
+		dialog.setCancelable(false);
+		NetWorkManager.SuccessCallback successCallback = new NetWorkManager.SuccessCallback(){
+			@Override
+			public void onSuccess(String result) {
+				// TODO Auto-generated method stub	
+                dialog.cancel();
+                try {
+					dialog.cancel();
+					JSONArray mJson = new JSONArray(result);
+					List<Integer> posiList = new ArrayList<Integer>();
+					for(int i = 0; i < mJson.length(); i++)
+					{
+						posiList.add((Integer)mJson.get(i));
+					}
+					gridView.setAdapter(new ItemAdapter(mContext, posiList));			
+				} catch (JSONException e) {
+			 		// TODO Auto-generated catch block
+					e.printStackTrace();
+				} 
+			}		
+		};
+		NetWorkManager.FailCallback failCallback = new NetWorkManager.FailCallback() {	
+			@Override
+			public void onFail() {
+				dialog.cancel();
+				Toast.makeText(mContext, "通过网络获取信息时出现异常！！", Toast.LENGTH_SHORT).show();		
+			}
+		};	
+		final String url = ip+"/booked/detail/";
+		NetWorkManager manager = NetWorkManager.getInstance();
+		NetWorkManager.HttpMethod httpMethod = NetWorkManager.HttpMethod.POST;
+		dialog.show();
+		manager.NetConnection(successCallback, failCallback, url, httpMethod,"stadium_id", id, "time", time.toString());		
+	}
+	public void sendOrder(final Context mContext, String id, int time, String position)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 		builder.setTitle("当前状态：");
@@ -553,8 +586,8 @@ public class CommandManager {
 			public void onSuccess(String result) {
 				// TODO Auto-generated method stub	 
 				mDialog.cancel();
-				Toast.makeText(mContext, NetWorkManager.sCookie, Toast.LENGTH_LONG).show();
-				if(result.equals("booking success!!"))
+				Toast.makeText(mContext, NetWorkManager.session, Toast.LENGTH_LONG).show();
+				if(result.equals("order accepted"))
         		{	
 					Toast.makeText(mContext, "订单提交成功！！", Toast.LENGTH_SHORT).show();
 	        		Intent intent = new Intent();
@@ -574,105 +607,13 @@ public class CommandManager {
 				mDialog.cancel();
 				Toast.makeText(mContext, "通过网络获取信息时出现异常！！", Toast.LENGTH_LONG).show();		
 			}
-		};
-		//构造订单
-		JSONObject order_object = new JSONObject();
-		try {
-			order_object.put("id", id);
-			JSONArray position_array = new JSONArray();
-			for(int i = 0; i < positionList.size(); i++)
-			{
-				Position position = positionList.get(i);
-				JSONObject position_object = new JSONObject();
-				position_object.put("position", position.getPosition());
-				List<Time> timeList = position.getTimeList();
-				JSONArray  time_array = new JSONArray();
-				for(int j = 0; j < timeList.size(); j++)
-				{
-					Time time = timeList.get(j);
-					JSONObject time_object = new JSONObject();
-					time_object.put("time", time.getTime());
-					time_array.put(time_object);
-				}
-				position_object.put("time", time_array);
-				position_array.put(position_object);
-			}			
-			order_object.put("position", position_array);
-			
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		};	
 		final String url = ip+"/booking/";
 		NetWorkManager manager = NetWorkManager.getInstance();
 		NetWorkManager.HttpMethod httpMethod = NetWorkManager.HttpMethod.POST;
 		mDialog.show();
-		manager.NetConnection(successCallback,failCallback, url, httpMethod, "order",order_object.toString());
+		manager.NetConnection(successCallback,failCallback, url, httpMethod, "stadium_id", id, "time", ""+time, "position", position);
 	}
 	
-	
-	
-	
-	
-    //以下功能为待实现或测试函数~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~	
-	
-    public List<Unit> get_unitList(int seller_id)
-    {
-		List<Unit> units = new ArrayList<Unit>();
-		for(int i = 1; i <= 5; i++)
-			for(int j = 9; j <= 21; j++)
-			{
-				units.add(new Unit(i, j, 0));
-			}
-		units.get(3).setEmpty(1);
-		units.get(10).setEmpty(1);
-		units.get(13).setEmpty(1);
-		units.get(20).setEmpty(1);
-		return units;
-    }
-    
-    public void getTest(final Context mContext,final AlertDialog mDialog)
-    {
-    	NetWorkManager.SuccessCallback successCallback = new NetWorkManager.SuccessCallback(){
-
-			@Override
-			public void onSuccess(String result) {
-				// TODO Auto-generated method stub	
-				mDialog.cancel();
-				Toast.makeText(mContext, result, Toast.LENGTH_SHORT).show();
-			}		
-		};
-		NetWorkManager.FailCallback failCallback = new NetWorkManager.FailCallback() {	
-			@Override
-			public void onFail() {
-				mDialog.cancel();
-				Toast.makeText(mContext, "通过网络获取信息时出现异常！！", Toast.LENGTH_SHORT).show();		
-			}
-		};
-    	final String url = "http://webservice.webxml.com.cn/WebServices/MobileCodeWS.asmx/getMobileCodeInfo";
-		NetWorkManager manager = NetWorkManager.getInstance();
-		NetWorkManager.HttpMethod httpMethod = NetWorkManager.HttpMethod.POST;
-		mDialog.show();
-		manager.NetConnection(successCallback, failCallback, url, httpMethod, 
-				             "mobileCode","13929591624",
-				             "userID","");	
-    }
-    public void getTest2()
-    {
-		String url_= "http://172.18.34.94:8000/modifyinfo/ordinary/";
-		//Get方法
-		HttpGet httpget = new HttpGet(url_);
-		//HttpClient发送请求
-		HttpClient defaultHttpClient = new DefaultHttpClient();
-		try {
-			HttpResponse response = defaultHttpClient.execute(httpget);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
 }
+	

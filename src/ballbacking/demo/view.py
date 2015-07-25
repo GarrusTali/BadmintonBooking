@@ -208,7 +208,8 @@ def display_order(request):
                 position=posint,
                 order=order
             )
-            timepos = Time.objects.get(position_id=posint,time=time)
+
+            timepos = Time.objects.get(position_id=int(posint)+1,time=time)
             timepos.empty = 0
             timepos.save()
         return HttpResponse('order accepted')        
